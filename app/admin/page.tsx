@@ -11,11 +11,13 @@ import { DashboardNav } from "@/components/dashboard-nav"
 import { ResourceOptimizationModal } from "@/components/resource-optimization-modal"
 import { AutoResolveModal } from "@/components/auto-resolve-modal"
 import { generateAdminReportPDF } from "@/lib/admin-pdf-generator"
+import { useSchedule } from "@/contexts/schedule-context"
 import { useToast } from "@/hooks/use-toast"
 import mockData from "@/data/mock-data.json"
 
 export default function AdminPage() {
   const { toast } = useToast()
+  const { generateSchedule, exams } = useSchedule()
   const [isGenerating, setIsGenerating] = useState(false)
   const [isOptimizing, setIsOptimizing] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
@@ -52,10 +54,13 @@ export default function AdminPage() {
     // Simulation d'une génération qui prend du temps
     await new Promise(resolve => setTimeout(resolve, 3000))
 
+    // Générer l'emploi du temps partagé
+    generateSchedule()
+
     setIsGenerating(false)
     toast({
       title: "EDT généré avec succès !",
-      description: "L'emploi du temps automatique a été créé et optimisé.",
+      description: "L'emploi du temps automatique a été créé et est maintenant visible par tous les utilisateurs.",
       variant: "default",
     })
   }
@@ -161,12 +166,12 @@ export default function AdminPage() {
 
   return (
     <AuthGuard requiredRole="admin">
-      <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
         <DashboardNav
           title="Administrateur Examens"
           subtitle="Service de Planification - Génération et optimisation des emplois du temps"
         />
-        <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8">
 
         <div className="grid gap-6 md:grid-cols-4 mb-8">
           <Card>
@@ -234,9 +239,9 @@ export default function AdminPage() {
                       size="sm"
                       disabled={conflicts.length === 0}
                     >
-                      <Sparkles className="mr-2 h-4 w-4" />
-                      Auto-résoudre
-                    </Button>
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Auto-résoudre
+                </Button>
                   }
                 />
               </div>
@@ -313,8 +318,8 @@ export default function AdminPage() {
               </Button>
               <Button className="w-full bg-transparent" variant="outline" asChild>
                 <Link href="/admin/schedule">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Planification Manuelle
+                <Calendar className="mr-2 h-4 w-4" />
+                Planification Manuelle
                 </Link>
               </Button>
               <div className="flex gap-2">
@@ -324,14 +329,14 @@ export default function AdminPage() {
                   onClick={handleOptimizeResources}
                   disabled={isOptimizing}
                 >
-                  <Clock className="mr-2 h-4 w-4" />
+                <Clock className="mr-2 h-4 w-4" />
                   {isOptimizing ? "Optimisation en cours..." : "Optimiser"}
                 </Button>
                 <ResourceOptimizationModal
                   trigger={
                     <Button variant="outline" size="sm">
                       <BarChart3 className="h-4 w-4" />
-                    </Button>
+              </Button>
                   }
                 />
               </div>
@@ -424,8 +429,8 @@ export default function AdminPage() {
             </div>
           </CardContent>
         </Card>
-        </div>
       </div>
+    </div>
     </AuthGuard>
   )
 }

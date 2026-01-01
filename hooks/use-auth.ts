@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 interface User {
   id: string
   name: string
-  role: "admin" | "dean" | "department" | "student"
+  role: "admin" | "dean" | "department" | "student" | "teacher"
   department?: string
   formation?: string
 }
@@ -68,6 +68,9 @@ export function useAuth() {
           break
         case 'student':
           router.push('/student')
+          break
+        case 'teacher':
+          router.push('/teacher')
           break
         default:
           router.push('/login')

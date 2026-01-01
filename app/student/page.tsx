@@ -9,27 +9,52 @@ import { AuthGuard } from "@/components/auth-guard"
 import { DashboardNav } from "@/components/dashboard-nav"
 import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/hooks/use-auth"
+import { useSchedule } from "@/contexts/schedule-context"
 import { generateStudentSchedulePDF } from "@/lib/pdf-generator"
 import mockData from "@/data/mock-data.json"
 
 export default function StudentPage() {
   const { toast } = useToast()
   const { user } = useAuth()
+  const { getStudentExams, exams: allExams } = useSchedule()
   const [selectedDept, setSelectedDept] = useState("Informatique")
   const [selectedFormation, setSelectedFormation] = useState("Licence 2 Informatique")
   const [isExporting, setIsExporting] = useState(false)
 
-  const exams = mockData.examens
+  // Utiliser les examens générés ou les données mockées comme fallback
+  const generatedExams = getStudentExams(selectedFormation, selectedDept)
+  const fallbackExams = mockData.examens
     .filter((e) => e.departement === selectedDept && e.formation === selectedFormation)
     .map((e) => ({
-      date: new Date(e.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }),
-      time: `${e.heureDebut} - ${e.heureFin}`,
-      subject: e.moduleName,
-      room: e.salle,
-      professor: e.professeur,
-      type: e.type,
+      id: e.id,
+      moduleName: e.moduleName,
+      formation: e.formation,
+      department: e.departement,
+      date: e.date,
+      startTime: e.heureDebut,
+      endTime: e.heureFin,
       duration: e.dureeMinutes,
+      roomId: e.salleId,
+      room: e.salle,
+      professorId: e.professeurId,
+      professor: e.professeur,
+      studentCount: e.nbEtudiants,
+      type: e.type,
+      status: 'planned' as const
     }))
+
+  // Prioriser les examens générés, sinon utiliser les données mockées
+  const studentExams = generatedExams.length > 0 ? generatedExams : fallbackExams
+
+  const exams = studentExams.map((e) => ({
+    date: new Date(e.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }),
+    time: `${e.startTime} - ${e.endTime}`,
+    subject: e.moduleName,
+    room: e.room,
+    professor: e.professor,
+    type: e.type,
+    duration: e.duration,
+  }))
 
   const totalExams = exams.length
   const totalHours = exams.reduce((sum, e) => sum + e.duration / 60, 0)
@@ -75,12 +100,12 @@ export default function StudentPage() {
 
   return (
     <AuthGuard requiredRole="student">
-      <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
         <DashboardNav
           title="Mon Planning d'Examens"
           subtitle={`${selectedFormation} - Session Janvier 2025`}
         />
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
 
         <Card className="mb-6">
           <CardHeader>
@@ -259,8 +284,8 @@ export default function StudentPage() {
             </div>
           </CardContent>
         </Card>
-        </div>
       </div>
+    </div>
     </AuthGuard>
   )
 }

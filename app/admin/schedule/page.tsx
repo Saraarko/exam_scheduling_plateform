@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { DashboardNav } from "@/components/dashboard-nav"
 import { AuthGuard } from "@/components/auth-guard"
+import { useSchedule } from "@/contexts/schedule-context"
 import { useToast } from "@/hooks/use-toast"
 import {
   ArrowLeft,
@@ -71,25 +72,26 @@ interface NewExamForm {
 
 export default function AdminSchedulePage() {
   const { toast } = useToast()
-  const [exams, setExams] = useState<Exam[]>(
-    mockData.examens.map(exam => ({
-      id: exam.id,
-      moduleName: exam.moduleName,
-      formation: exam.formation,
-      department: exam.departement,
-      date: exam.date,
-      startTime: exam.heureDebut,
-      endTime: exam.heureFin,
-      duration: exam.dureeMinutes,
-      roomId: exam.salleId,
-      room: exam.salle,
-      professorId: exam.professeurId,
-      professor: exam.professeur,
-      studentCount: exam.nbEtudiants,
-      type: exam.type,
-      status: 'planned' as const
-    }))
-  )
+  const { exams, addExam, updateExam, deleteExam, confirmExam } = useSchedule()
+
+  // Si pas d'examens générés, utiliser les données mockées comme base
+  const displayExams = exams.length > 0 ? exams : mockData.examens.map(exam => ({
+    id: exam.id,
+    moduleName: exam.moduleName,
+    formation: exam.formation,
+    department: exam.departement,
+    date: exam.date,
+    startTime: exam.heureDebut,
+    endTime: exam.heureFin,
+    duration: exam.dureeMinutes,
+    roomId: exam.salleId,
+    room: exam.salle,
+    professorId: exam.professeurId,
+    professor: exam.professeur,
+    studentCount: exam.nbEtudiants,
+    type: exam.type,
+    status: 'planned' as const
+  }))
 
   const [isAddingExam, setIsAddingExam] = useState(false)
   const [editingExam, setEditingExam] = useState<Exam | null>(null)
@@ -164,7 +166,7 @@ export default function AdminSchedulePage() {
     }
 
     const exam: Exam = {
-      id: Math.max(...exams.map(e => e.id)) + 1,
+      id: Math.max(...displayExams.map(e => e.id)) + 1,
       moduleName: newExam.moduleName,
       formation: newExam.formation,
       department: newExam.department,
@@ -181,7 +183,7 @@ export default function AdminSchedulePage() {
       status: 'planned'
     }
 
-    setExams([...exams, exam])
+    addExam(exam)
     setNewExam({
       moduleName: '',
       formation: '',
@@ -223,7 +225,7 @@ export default function AdminSchedulePage() {
     if (!editingExam) return
 
     // Vérifier les conflits (en excluant l'examen en cours d'édition)
-    const tempExams = exams.filter(e => e.id !== editingExam.id)
+    const tempExams = displayExams.filter(e => e.id !== editingExam.id)
     const updatedExam = {
       ...editingExam,
       moduleName: newExam.moduleName,
@@ -252,7 +254,7 @@ export default function AdminSchedulePage() {
       return
     }
 
-    setExams(exams.map(e => e.id === editingExam.id ? updatedExam : e))
+    updateExam(editingExam.id, updatedExam)
     setEditingExam(null)
     setNewExam({
       moduleName: '',
@@ -275,7 +277,7 @@ export default function AdminSchedulePage() {
   }
 
   const handleDeleteExam = (examId: number) => {
-    setExams(exams.filter(e => e.id !== examId))
+    deleteExam(examId)
     toast({
       title: "Examen supprimé",
       description: "L'examen a été supprimé de la planification.",
@@ -284,9 +286,7 @@ export default function AdminSchedulePage() {
   }
 
   const handleConfirmExam = (examId: number) => {
-    setExams(exams.map(e =>
-      e.id === examId ? { ...e, status: 'confirmed' as const } : e
-    ))
+    confirmExam(examId)
     toast({
       title: "Examen confirmé",
       description: "L'examen a été confirmé et publié.",
@@ -354,9 +354,9 @@ export default function AdminSchedulePage() {
     }
   }
 
-  const confirmedExams = exams.filter(e => e.status === 'confirmed').length
-  const plannedExams = exams.filter(e => e.status === 'planned').length
-  const totalStudents = exams.reduce((sum, exam) => sum + exam.studentCount, 0)
+  const confirmedExams = displayExams.filter(e => e.status === 'confirmed').length
+  const plannedExams = displayExams.filter(e => e.status === 'planned').length
+  const totalStudents = displayExams.reduce((sum, exam) => sum + exam.studentCount, 0)
 
   return (
     <AuthGuard requiredRole="admin">
@@ -374,7 +374,7 @@ export default function AdminSchedulePage() {
                 <div className="flex items-center gap-3">
                   <CalendarIcon className="h-8 w-8 text-blue-600" />
                   <div>
-                    <p className="text-2xl font-bold">{exams.length}</p>
+                    <p className="text-2xl font-bold">{displayExams.length}</p>
                     <p className="text-sm text-muted-foreground">Examens totaux</p>
                   </div>
                 </div>
@@ -631,7 +631,7 @@ export default function AdminSchedulePage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {exams.map((exam) => (
+                    {displayExams.map((exam) => (
                       <TableRow key={exam.id}>
                         <TableCell className="font-medium">
                           <div>

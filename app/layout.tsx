@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
+import { ScheduleProvider } from "@/contexts/schedule-context"
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
 
@@ -46,7 +47,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <ScheduleProvider>
+            {children}
+          </ScheduleProvider>
           <Toaster />
         </ThemeProvider>
         <Analytics />

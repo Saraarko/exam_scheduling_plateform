@@ -80,12 +80,12 @@ export default function DeanPage() {
 
   return (
     <AuthGuard requiredRole="dean">
-      <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
         <DashboardNav
           title="Tableau de Bord Vice-Doyen / Doyen"
           subtitle={`${mockData.university.name} - Vue stratégique globale et KPIs académiques`}
         />
-        <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8">
 
         <div className="grid gap-6 md:grid-cols-4 mb-8">
           {globalStats.map((stat, index) => {
@@ -255,16 +255,16 @@ export default function DeanPage() {
                     onClick={handleValidateGlobalSchedule}
                     disabled={isValidating}
                   >
-                    <Calendar className="mr-2 h-4 w-4" />
+                  <Calendar className="mr-2 h-4 w-4" />
                     {isValidating ? "Validation en cours..." : "Valider l'emploi du temps global"}
-                  </Button>
+                </Button>
                 )}
               </div>
             </CardContent>
           </Card>
         </div>
-        </div>
       </div>
+    </div>
     </AuthGuard>
   )
 }

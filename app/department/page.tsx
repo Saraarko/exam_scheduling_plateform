@@ -38,12 +38,12 @@ export default function DepartmentPage() {
 
   return (
     <AuthGuard requiredRole="department">
-      <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
         <DashboardNav
           title={`Chef de Département - ${currentDept.name}`}
           subtitle={`Validation et statistiques par formation • ${currentDept.totalProfessors} professeurs • ${currentDept.formations} formations`}
         />
-        <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8">
 
         <div className="grid gap-6 md:grid-cols-4 mb-8">
           {stats.map((stat, index) => (
@@ -203,9 +203,9 @@ export default function DepartmentPage() {
               </div>
             </CardContent>
           </Card>
-          </div>
         </div>
       </div>
+    </div>
     </AuthGuard>
   )
 }

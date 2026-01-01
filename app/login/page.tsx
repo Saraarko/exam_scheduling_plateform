@@ -54,6 +54,14 @@ const mockUsers: User[] = [
     name: "Rayan Kh",
     department: "Informatique",
     formation: "Licence 2 Informatique"
+  },
+  {
+    id: "teacher-1",
+    email: "professeur@univ.ma",
+    password: "prof123",
+    role: "teacher",
+    name: "Dr. Professeur",
+    department: "Informatique"
   }
 ]
 
@@ -114,6 +122,9 @@ function LoginForm() {
           case "department":
             router.push("/department")
             break
+          case "teacher":
+            router.push("/teacher")
+            break
           case "student":
             router.push("/student")
             break
@@ -171,6 +182,7 @@ function LoginForm() {
                     <SelectItem value="admin">Administrateur</SelectItem>
                     <SelectItem value="dean">Vice-Doyen/Doyen</SelectItem>
                     <SelectItem value="department">Chef de Département</SelectItem>
+                    <SelectItem value="teacher">Professeur</SelectItem>
                     <SelectItem value="student">Étudiant</SelectItem>
                   </SelectContent>
                 </Select>
@@ -242,6 +254,7 @@ function LoginForm() {
                 <div><strong>Admin:</strong> saraarkoub@gmail.com / sara123</div>
                 <div><strong>Doyen:</strong> ayaat@gmail.com / ayaat123</div>
                 <div><strong>Chef Dept:</strong> belkacemi@gmail.com / belkacemi123</div>
+                <div><strong>Professeur:</strong> professeur@univ.ma / prof123</div>
                 <div><strong>Étudiant:</strong> rayankh@univ.ma / rayan123</div>
               </div>
             </div>
