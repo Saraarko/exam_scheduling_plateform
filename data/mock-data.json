@@ -1,0 +1,218 @@
+{
+  "university": {
+    "name": "UMBB Faculté de Science",
+    "totalStudents": 13000,
+    "totalDepartments": 7,
+    "totalFormations": 200
+  },
+  "departments": [
+    {
+      "id": 1,
+      "name": "Informatique",
+      "code": "INFO",
+      "totalStudents": 2100,
+      "totalProfessors": 45,
+      "formations": 28
+    },
+    {
+      "id": 2,
+      "name": "Mathématiques",
+      "code": "MATH",
+      "totalStudents": 1800,
+      "totalProfessors": 38,
+      "formations": 25
+    },
+    {
+      "id": 3,
+      "name": "Physique",
+      "code": "PHYS",
+      "totalStudents": 1500,
+      "totalProfessors": 32,
+      "formations": 22
+    },
+    {
+      "id": 4,
+      "name": "Chimie",
+      "code": "CHIM",
+      "totalStudents": 1400,
+      "totalProfessors": 30,
+      "formations": 20
+    },
+    {
+      "id": 5,
+      "name": "Sciences Économiques",
+      "code": "ECO",
+      "totalStudents": 3200,
+      "totalProfessors": 42,
+      "formations": 35
+    },
+    {
+      "id": 6,
+      "name": "Sciences de la Vie",
+      "code": "SVT",
+      "totalStudents": 2000,
+      "totalProfessors": 35,
+      "formations": 30
+    },
+    {
+      "id": 7,
+      "name": "Lettres et Sciences Humaines",
+      "code": "LSH",
+      "totalStudents": 1000,
+      "totalProfessors": 28,
+      "formations": 40
+    }
+  ],
+  "salles": [
+    {
+      "id": 1,
+      "name": "Amphi A",
+      "type": "amphitheatre",
+      "capacite": 500,
+      "batiment": "Bâtiment Principal"
+    },
+    {
+      "id": 2,
+      "name": "Amphi B",
+      "type": "amphitheatre",
+      "capacite": 400,
+      "batiment": "Bâtiment Principal"
+    },
+    {
+      "id": 3,
+      "name": "Amphi C",
+      "type": "amphitheatre",
+      "capacite": 350,
+      "batiment": "Bâtiment Sciences"
+    },
+    {
+      "id": 4,
+      "name": "Salle TP-101",
+      "type": "salle",
+      "capacite": 20,
+      "batiment": "Bâtiment Informatique"
+    },
+    {
+      "id": 5,
+      "name": "Salle TD-202",
+      "type": "salle",
+      "capacite": 20,
+      "batiment": "Bâtiment Principal"
+    }
+  ],
+  "examens": [
+    {
+      "id": 1,
+      "moduleId": 101,
+      "moduleName": "Algorithmique Avancée",
+      "formation": "Licence 2 Informatique",
+      "departement": "Informatique",
+      "date": "2025-01-15",
+      "heureDebut": "09:00",
+      "heureFin": "11:00",
+      "dureeMinutes": 120,
+      "salleId": 1,
+      "salle": "Amphi A",
+      "professeurId": 1,
+      "professeur": "Dr. Martin Ahmed",
+      "nbEtudiants": 120,
+      "type": "Écrit"
+    },
+    {
+      "id": 2,
+      "moduleId": 102,
+      "moduleName": "Bases de Données",
+      "formation": "Licence 2 Informatique",
+      "departement": "Informatique",
+      "date": "2025-01-16",
+      "heureDebut": "14:00",
+      "heureFin": "16:00",
+      "dureeMinutes": 120,
+      "salleId": 4,
+      "salle": "Salle TP-101",
+      "professeurId": 2,
+      "professeur": "Pr. Dubois Fatima",
+      "nbEtudiants": 20,
+      "type": "TP"
+    },
+    {
+      "id": 3,
+      "moduleId": 201,
+      "moduleName": "Analyse Complexe",
+      "formation": "Master 1 Mathématiques",
+      "departement": "Mathématiques",
+      "date": "2025-01-15",
+      "heureDebut": "14:00",
+      "heureFin": "17:00",
+      "dureeMinutes": 180,
+      "salleId": 2,
+      "salle": "Amphi B",
+      "professeurId": 3,
+      "professeur": "Dr. Bennani Youssef",
+      "nbEtudiants": 45,
+      "type": "Écrit"
+    }
+  ],
+  "conflits": [
+    {
+      "id": 1,
+      "type": "Salle",
+      "severite": "haute",
+      "message": "Amphi A - conflit de réservation le 15/01 à 09h00",
+      "departement": "Informatique",
+      "date": "2025-01-15",
+      "status": "non_resolu",
+      "details": "Deux examens planifiés en même temps: Algorithmique (INFO) et Physique Quantique (PHYS)"
+    },
+    {
+      "id": 2,
+      "type": "Professeur",
+      "severite": "haute",
+      "message": "Dr. Martin - dépassement limite 3 examens/jour le 16/01",
+      "departement": "Informatique",
+      "date": "2025-01-16",
+      "status": "non_resolu",
+      "details": "4 surveillances planifiées pour Dr. Martin Ahmed"
+    },
+    {
+      "id": 3,
+      "type": "Étudiant",
+      "severite": "haute",
+      "message": "85 étudiants avec 2 examens le même jour (violation contrainte)",
+      "departement": "Mathématiques",
+      "date": "2025-01-17",
+      "status": "non_resolu",
+      "details": "Étudiants inscrits en double formation"
+    },
+    {
+      "id": 4,
+      "type": "Capacité",
+      "severite": "moyenne",
+      "message": "Salle TD-202 - capacité insuffisante (30 étudiants pour 20 places)",
+      "departement": "Physique",
+      "date": "2025-01-18",
+      "status": "non_resolu",
+      "details": "Nécessite relocalisation vers un amphi"
+    },
+    {
+      "id": 5,
+      "type": "Horaire",
+      "severite": "faible",
+      "message": "Chevauchement partiel formations Master 2 Chimie",
+      "departement": "Chimie",
+      "date": "2025-01-20",
+      "status": "en_cours",
+      "details": "15 minutes de chevauchement détectées"
+    }
+  ],
+  "kpis": {
+    "occupationAmphis": 82,
+    "occupationSalles": 76,
+    "tauxConflits": 2.4,
+    "heuresProfPlanifiees": 1847,
+    "tempsGenerationEDT": 38,
+    "tauxValidation": 78,
+    "nbExamensPlanifies": 856,
+    "nbSurveillancesParProf": 12.5
+  }
+}
